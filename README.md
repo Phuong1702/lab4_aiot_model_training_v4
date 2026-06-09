@@ -1,65 +1,104 @@
-# Lab 4 v4 Upgrade: AI Model Training for IoT Forecasting
+# LAB 4 - AIoT Forecasting & Predictive Analytics
+
+## Giới thiệu
+
+Dự án **LAB 4** thuộc học phần Triển khai, phát triển ứng dụng AI và IoT.
+Bài lab tập trung vào xây dựng mô hình AI để dự báo dữ liệu IoT, đánh giá sai số và triển khai mô hình dự báo bằng FastAPI.
 
 ## Mục tiêu
-Lab này tập trung vào **model AI** thay vì đi nhanh sang API. Sinh viên học cách biến dữ liệu IoT thành bài toán học máy, train model, test model, đọc metric, tinh chỉnh tham số và so sánh hành vi model trên hai dataset.
 
-## Hai dataset
-1. **UCI Appliances Energy Prediction**: dự báo `Appliances` trong tương lai gần.
-2. **UCI Occupancy Detection / CO2 Forecasting**: dùng dữ liệu môi trường phòng để dự báo `CO2` trong tương lai gần.
+* Xử lý dữ liệu cảm biến IoT dạng time-series.
+* Huấn luyện mô hình dự báo dữ liệu.
+* Đánh giá mô hình bằng các chỉ số như MAE, RMSE.
+* So sánh kết quả dự báo với dữ liệu thực tế.
+* Lưu model và kết quả dự đoán.
+* Triển khai API dự báo bằng FastAPI.
 
-Nếu có Internet, chạy `python src/download_data.py` để tải dữ liệu từ UCI. Nếu không có Internet, project tự dùng dữ liệu sample trong `data/sample/` để toàn bộ pipeline vẫn chạy được.
+## Công nghệ sử dụng
+
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* Matplotlib
+* FastAPI
+* Uvicorn
+* Joblib
+* Jupyter Notebook
+
+## Cấu trúc thư mục
+
+```text
+LAB4/
+├── data/
+├── figures/
+├── models/
+├── notebooks/
+├── outputs/
+├── src/
+├── requirements.txt
+└── README.md
+```
 
 ## Cài đặt
+
 ```bash
 python -m venv .venv
-# Windows
 .venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Nếu muốn chạy LSTM:
-```bash
-pip install -r requirements_lstm.txt
-```
+## Chạy chương trình
 
-## Chạy nhanh toàn bộ phần bắt buộc
+### Chuẩn bị dữ liệu
+
 ```bash
 python src/download_data.py
-python src/prepare_datasets.py
-python src/train_classical_models.py
-python src/plot_results.py
-python src/compare_two_datasets.py
-python src/test_local_pipeline.py
 ```
 
-## Chạy phần khám phá LSTM
+### Train model
+
 ```bash
-python src/train_lstm.py --datasets appliances --epochs 12
+python src/train_forecast.py
 ```
 
-## Output chính
+Hoặc chạy toàn bộ pipeline nếu project có file `run_all.py`:
+
+```bash
+python src/run_all.py
+```
+
+### Vẽ biểu đồ kết quả
+
+```bash
+python src/plot_results.py
+```
+
+## Chạy API
+
+```bash
+uvicorn src.app:app --reload
+```
+
+Mở trình duyệt:
+
 ```text
-outputs/metrics_all_models.csv
-outputs/model_comparison.csv
-outputs/tuning_log.csv
-outputs/predictions_appliances.csv
-outputs/predictions_co2.csv
-outputs/lstm_metrics.csv                 # nếu chạy LSTM
-outputs/model_card_appliances.md
-outputs/model_card_co2.md
-figures/model_comparison_mae.png
-figures/forecast_vs_actual_appliances.png
-figures/forecast_vs_actual_co2.png
-figures/error_over_time_appliances.png
-figures/error_over_time_co2.png
+http://127.0.0.1:8000/docs
 ```
 
-## Câu hỏi trung tâm
-- Model AI học gì từ dữ liệu IoT?
-- Vì sao cần baseline trước khi dùng model phức tạp?
-- Vì sao train/test phải theo thời gian?
-- Metric nào cho biết model sai nhiều hay ít?
-- Model tốt trên một dataset có chắc tốt trên dataset khác không?
-- LSTM có luôn tốt hơn Random Forest không? Vì sao?
+## Kết quả đầu ra
+
+Sau khi chạy project, các kết quả được lưu trong:
+
+```text
+models/
+outputs/
+figures/
+```
+Bao gồm:
+
+* Model dự báo đã huấn luyện.
+* File kết quả dự đoán.
+* File đánh giá sai số.
+* Biểu đồ so sánh dữ liệu thực tế và dữ liệu dự báo.
+
